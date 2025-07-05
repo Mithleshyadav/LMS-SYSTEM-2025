@@ -1,10 +1,13 @@
 import React from 'react'
+import { Button } from './components/ui/button.jsx'
+import { Routes, Route } from 'react-router-dom'
+import AuthPage from './pages/auth/index.jsx'
 
 const App = () => {
   return (
-    <div className='bg-red-600'>
-      Welcome
-    </div>
+   <Routes>
+    <Route path="/auth" element={<AuthPage/>}/>
+   </Routes>
   )
 }
 
