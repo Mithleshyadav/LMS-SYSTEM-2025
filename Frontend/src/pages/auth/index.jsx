@@ -3,13 +3,16 @@ import { GraduationCap } from 'lucide-react'
 import { Link } from 'react-router-dom'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@radix-ui/react-tabs'
 import {Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
-import { signInFormControls } from '@/config'
+import { signInFormControls, signUpFormControls } from '@/config'
 import { AuthContext  }  from '@/context/auth-context'
 import CommonForm from '@/components/common-form'
 
 function AuthPage () {
   const [activeTab, setActiveTab] = useState('signin');
   const {
+    signUpFormData,
+    setSignUpFormData,
+    handleRegisterUser,
     signInFormData,
     setSignInFormData,
     handleLoginUser
@@ -22,8 +25,19 @@ function AuthPage () {
       signInFormData.password !== "" 
     );
   }
-
   console.log(signInFormData);
+
+  function checkIfSignUpFormIsValid () {
+    return (
+      signUpFormData &&
+      signUpFormData.userName !== "" &&
+      signUpFormData.userEmail !== "" &&
+      signUpFormData.password !== "" 
+    );
+  }
+  console.log(signInFormData);
+
+  
 
   function handleTabChange (value) {
     setActiveTab(value)
@@ -79,7 +93,26 @@ function AuthPage () {
               </CardContent>
             </Card>
           </TabsContent>
-          <TabsContent value='signup'>singup</TabsContent>
+          <TabsContent value='signup'>
+            <Card className="p-6 space-y-4">
+              <CardHeader>
+                <CardTitle>Sign Up to your account</CardTitle>
+                <CardDescription>
+                  Enter your details to create a new account
+                </CardDescription>
+              </CardHeader>
+              <CardContent className="space-y-2" >
+                <CommonForm
+                formControls={signUpFormControls}
+                buttonText={"Sign Up"}
+                formData={signUpFormData}
+                setFormData={setSignUpFormData}
+                isButtonDisabled={!checkIfSignUpFormIsValid()}
+                handleSubmit={handleRegisterUser}/>
+
+              </CardContent>
+            </Card>
+          </TabsContent>
         </Tabs>
       </div>
     </div>

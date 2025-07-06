@@ -31,12 +31,12 @@ function FormControls({formControls =[], formData, setFormData}) {
             />
           );
           break;
-         case "select":
-            element = <Select/>
-          break;
-         case "textarea":
-            element = <Textarea/>
-          break;
+        //  case "select":
+        //     element = <Select/>
+        //   break;
+        //  case "textarea":
+        //     element = <Textarea/>
+        //   break;
 
           default:
              element = (
