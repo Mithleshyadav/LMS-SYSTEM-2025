@@ -20,7 +20,7 @@ router.post('/login', [
 ],
 loginUser
 );
-router.post('/getMe', authUser, getMe);
+router.post('/checkAuth', authUser, checkAuth);
 
 router.get('/logout', authUser, logoutUser);
 

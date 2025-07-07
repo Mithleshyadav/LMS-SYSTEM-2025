@@ -35,7 +35,13 @@ if(isUserAlreadyExist) {
   if(!user){
     return res.status(400).json({message:'User not created'});
   }
-  await genTokenAndSetCookie(user._id, res); 
+ 
+
+   res.status(201).json({
+      success: true,
+      message: "User registered successfully, Please Login to continue"
+    
+    });
 
  
 } 
@@ -68,10 +74,12 @@ export const loginUser = async (req, res, next) => {
   }
 
   await genTokenAndSetCookie(user._id, res); 
+  res.status(201).json({
+      success: true,
+      message: "User loggedIn successfully"
+    
+    });
 
-  // const token = user.generateAuthToken();
-  // res.cookie('token', token);
-  // res.status(201).json({token, user});
 }
 catch (error) {
   console.log(error);
@@ -91,7 +99,9 @@ export const logoutUser = async (req, res, next) => {
   
   await blacklistTokenModel.create({token});
 
-  res.status(200).json({message: 'Logged out successfully'});
+  res.status(200).json({
+    success: true,
+    message: 'Logged out successfully'});
 } catch (error) {
   console.log(error);
   res.status(500).json({ error: "Internal server error" });
@@ -100,15 +110,15 @@ export const logoutUser = async (req, res, next) => {
 
 
 
-export const getMe = async (req, res) => {
+export const checkAuth = async (req, res) => {
   try {
-    const loggedInUser = req.user;
+    const user = req.user;
 
-    if (!loggedInUser) {
+    if (!user) {
       return res.status(401).json({ message: 'User validation failed' });
     }
 
-    return res.status(200).json(loggedInUser);
+    return res.status(200).json(user);
   } catch (error) {
     console.error(error);
     return res.status(500).json({ error: 'Internal Server Error' });
