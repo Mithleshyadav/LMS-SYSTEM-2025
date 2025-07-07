@@ -3,6 +3,8 @@ const express = require('express');
 const cors = require('cors');
 const connectToDb = require('./db/db.js');
 
+import errorMiddleware from "./middlewares/error.middleware.js";
+
 
 const app = express();
 const PORT = process.env.PORT || 5000;
@@ -16,13 +18,6 @@ app.use(cors({
 connectToDb();
 app.use(express.json());
 
-app.use((err, req, res, next)=> {
-  console.log(err.stack);
-  res.status(500).json({
-    success: false,
-    message: 'Something went wrong'
-  })
-})
 
 const userRoutes = require('./routes/user.route');
 app.use('/api/v1/auth', userRoutes);
@@ -31,3 +26,4 @@ app.listen(PORT, ()=> {
   console.log(`Server is running on port ${PORT}`);
 });
 
+app.use(errorMiddleware);
