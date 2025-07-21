@@ -1,50 +1,56 @@
-import React, { useState , useContext} from 'react'
-import { GraduationCap } from 'lucide-react'
-import { Link } from 'react-router-dom'
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@radix-ui/react-tabs'
-import {Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
-import { signInFormControls, signUpFormControls } from '@/config'
-import { AuthContext  }  from '@/context/auth-context'
-import CommonForm from '@/components/common-form'
+import React, { useState, useContext } from 'react';
+import { useSearchParams } from 'react-router-dom';
+import { GraduationCap } from 'lucide-react';
+import { Link } from 'react-router-dom';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@radix-ui/react-tabs';
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from '@/components/ui/card';
+import { signInFormControls, signUpFormControls } from '@/config';
+import { AuthContext } from '@/context/auth-context';
+import CommonForm from '@/components/common-form';
 
-function AuthPage () {
-  const [activeTab, setActiveTab] = useState('signin');
+function AuthPage() {
+  const [searchParams] = useSearchParams();
+  const initialTab = searchParams.get("tab") || "signin";
+  const [activeTab, setActiveTab] = useState(initialTab);
+
   const {
     signUpFormData,
     setSignUpFormData,
     handleRegisterUser,
     signInFormData,
     setSignInFormData,
-    handleLoginUser
+    handleLoginUser,
   } = useContext(AuthContext);
-  
-  function checkIfSignInFormIsValid () {
+
+  function checkIfSignInFormIsValid() {
     return (
       signInFormData &&
-      signInFormData.userEmail !== "" &&
-      signInFormData.password !== "" 
+      signInFormData.userEmail !== '' &&
+      signInFormData.password !== ''
     );
   }
-  console.log(signInFormData);
 
-  function checkIfSignUpFormIsValid () {
+  function checkIfSignUpFormIsValid() {
     return (
       signUpFormData &&
-      signUpFormData.userName !== "" &&
-      signUpFormData.userEmail !== "" &&
-      signUpFormData.password !== "" 
+      signUpFormData.userName !== '' &&
+      signUpFormData.userEmail !== '' &&
+      signUpFormData.password !== ''
     );
   }
-  console.log(signInFormData);
 
-  
-
-  function handleTabChange (value) {
-    setActiveTab(value)
+  function handleTabChange(value) {
+    setActiveTab(value);
   }
 
   return (
-    <div className=' flex flex-col min-h-screen'>
+    <div className='flex flex-col min-h-screen'>
       <header className='px-4 lg:px-6 h-14 flex items-center border-b'>
         <Link to={'/'} className='flex items-center justify-center'>
           <GraduationCap className='h-8 w-8 mr-4' />
@@ -74,49 +80,50 @@ function AuthPage () {
           </TabsList>
 
           <TabsContent value='signin'>
-            <Card className="p-6 space-y-4">
+            <Card className='p-6 space-y-4'>
               <CardHeader>
                 <CardTitle>Sign in to your account</CardTitle>
                 <CardDescription>
                   Enter your email and password to access your account
                 </CardDescription>
               </CardHeader>
-              <CardContent className="space-y-2" >
+              <CardContent className='space-y-2'>
                 <CommonForm
-                formControls={signInFormControls}
-                buttonText={"Sign In"}
-                formData={signInFormData}
-                setFormData={setSignInFormData}
-                isButtonDisabled={!checkIfSignInFormIsValid()}
-                handleSubmit={handleLoginUser}/>
-
+                  formControls={signInFormControls}
+                  buttonText={'Sign In'}
+                  formData={signInFormData}
+                  setFormData={setSignInFormData}
+                  isButtonDisabled={!checkIfSignInFormIsValid()}
+                  handleSubmit={handleLoginUser}
+                />
               </CardContent>
             </Card>
           </TabsContent>
+
           <TabsContent value='signup'>
-            <Card className="p-6 space-y-4">
+            <Card className='p-6 space-y-4'>
               <CardHeader>
                 <CardTitle>Sign Up to your account</CardTitle>
                 <CardDescription>
                   Enter your details to create a new account
                 </CardDescription>
               </CardHeader>
-              <CardContent className="space-y-2" >
+              <CardContent className='space-y-2'>
                 <CommonForm
-                formControls={signUpFormControls}
-                buttonText={"Sign Up"}
-                formData={signUpFormData}
-                setFormData={setSignUpFormData}
-                isButtonDisabled={!checkIfSignUpFormIsValid()}
-                handleSubmit={handleRegisterUser}/>
-
+                  formControls={signUpFormControls}
+                  buttonText={'Sign Up'}
+                  formData={signUpFormData}
+                  setFormData={setSignUpFormData}
+                  isButtonDisabled={!checkIfSignUpFormIsValid()}
+                  handleSubmit={handleRegisterUser}
+                />
               </CardContent>
             </Card>
           </TabsContent>
         </Tabs>
       </div>
     </div>
-  )
+  );
 }
 
-export default AuthPage
+export default AuthPage;

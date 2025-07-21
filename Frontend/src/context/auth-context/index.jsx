@@ -1,15 +1,23 @@
-import React, { createContext, useState } from 'react';
-import { useToast } from "@/components/ui/toast";
+import React, { createContext, useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
+import { toast } from "@/hooks/use-toast";
+import {
+  checkAuthService,
+  loginService,
+  registerService,
+  logoutService,
+} from "@/services";
+import {
+  initialSignInFormData,
+  initialSignUpFormData,
+} from "@/config";
 import { Skeleton } from "@/components/ui/skeleton";
-import { checkAuthService, loginService, registerService, logoutService  } from "@/services";
-import { initialSignInFormData,
-  initialSignUpFormData
- }  from '@/config';
 
 export const AuthContext = createContext(null);
 
-
 export default function AuthProvider({ children }) {
+  const navigate = useNavigate();
+
   const [signUpFormData, setSignUpFormData] = useState(initialSignUpFormData);
   const [signInFormData, setSignInFormData] = useState(initialSignInFormData);
   const [auth, setAuth] = useState({
@@ -19,107 +27,106 @@ export default function AuthProvider({ children }) {
 
   const [loading, setLoading] = useState(true);
 
- const { toast } = useToast(); 
-
+  // ✅ Registration
   async function handleRegisterUser(event) {
     event.preventDefault();
-    const res = await registerService(signUpFormData);
-
-    if (res.success) {
+    try {
+      const res = await registerService(signUpFormData);
       toast({
-        title: res.message || "Registration Successful",
-        description: "Welcome aboard!",
+        title: "Success",
+        description: res?.data?.message || "Registered successfully",
       });
-    } else {
+
+      // Reset form and redirect to sign-in tab
+      setSignUpFormData(initialSignUpFormData);
+      navigate("/auth?tab=signin"); // handled in AuthPage.jsx
+    } catch (err) {
+      const error = err?.response?.data;
       toast({
         title: "Registration Failed",
-        description: res.message || "Something went wrong",
+        description: error?.message || "Something went wrong",
         variant: "destructive",
       });
     }
   }
 
- async function handleLoginUser(event) {
+  // ✅ Login
+  async function handleLoginUser(event) {
     event.preventDefault();
-    const res = await loginService(signInFormData);
+    try {
+      const res = await loginService(signInFormData);
+      setAuth({ authenticate: true, user: res?.data?.user });
 
-    if (res.success) {
-      setAuth({ authenticate: true, user: res.data.user });
       toast({
-        title: 'res.message' || "Login Successful",
+        title: "Success",
+        description: res?.data?.message || "Logged in successfully",
       });
-    } else {
+
+      setSignInFormData(initialSignInFormData);
+      navigate("/"); // Redirect to home after login
+    } catch (err) {
+      const error = err?.response?.data;
       toast({
         title: "Login Failed",
-        description: "Invalid email or password",
+        description: error?.message || "Invalid credentials",
         variant: "destructive",
       });
     }
   }
 
-   async function checkAuthUser() {
+  // ✅ Auth Check
+  async function checkAuthUser() {
     try {
-      const response = await checkAuthService();
-      if (response.success) {
-        setAuth({
-          authenticate: true,
-          user: response.data.user,
-        });
-        setLoading(false);
+      const res = await checkAuthService();
+      if (res.success) {
+        setAuth({ authenticate: true, user: res.data.user });
       } else {
-        setAuth({
-          authenticate: false,
-          user: null,
-        });
-        setLoading(false);
+        resetCredentials();
       }
-    } catch (error) {
-      console.log(error);
-      if (!error?.response?.data?.success) {
-        setAuth({
-          authenticate: false,
-          user: null,
-        });
-        setLoading(false);
-      }
+    } catch (err) {
+      resetCredentials();
+    } finally {
+      setLoading(false);
     }
   }
 
-   useEffect(() => {
+  // ✅ Logout
+  async function handleLogoutUser() {
+    try {
+      await logoutService();
+      resetCredentials();
+      toast({
+        title: "Logout Successful",
+        description: "You've been logged out.",
+      });
+    } catch (err) {
+      toast({
+        title: "Logout Failed",
+        description: err?.response?.data?.message || "Something went wrong",
+        variant: "destructive",
+      });
+    }
+  }
+
+  function resetCredentials() {
+    setAuth({ authenticate: false, user: null });
+  }
+
+  useEffect(() => {
     checkAuthUser();
   }, []);
 
-  function resetCredentials() {
-    setAuth({
-      authenticate: false,
-      user: null,
-    });
-  }
-
- 
-
-  async function handleLogoutUser() {
-    await logoutService();
-    resetCredentials();
-    toast({
-      title: "Logout Successful",
-      description: "You've been logged out.",
-    });
-  }
-
-
-
- return (
+  return (
     <AuthContext.Provider
       value={{
-        signInFormData,
-        setSignInFormData,
         signUpFormData,
         setSignUpFormData,
+        signInFormData,
+        setSignInFormData,
         handleRegisterUser,
         handleLoginUser,
+        handleLogoutUser,
         auth,
-        handleLogoutUser
       }}
     >
       {loading ? <Skeleton /> : children}

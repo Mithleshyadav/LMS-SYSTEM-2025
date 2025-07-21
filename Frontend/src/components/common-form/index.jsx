@@ -12,7 +12,7 @@ function CommonForm({
   }) {
   return (
 
-    <form onSubmit={{handleSubmit}}>
+    <form onSubmit={handleSubmit}>
       <FormControls
       formControls={formControls}
       formData={formData}

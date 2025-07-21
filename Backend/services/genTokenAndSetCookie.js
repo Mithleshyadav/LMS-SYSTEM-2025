@@ -1,38 +1,37 @@
 import jwt from "jsonwebtoken";
 import ApiError from "../utils/ApiError.js";
 
-const generateTokenAndSetCookie = (userId, res) => {
+const genTokenAndSetCookie = (userId, res) => {
     try {
-        // Validate environment variable
+       
         if (!process.env.JWT_SECRET) {
             throw new ApiError(500, "JWT secret is not configured");
         }
 
-        // Generate token with more secure options
         const token = jwt.sign(
             { userId },
-            process.env.JWT_SECRET, // Fixed typo in 'SECRET'
+            process.env.JWT_SECRET, 
             {
                 expiresIn: "10d",
-                algorithm: "HS256", // Explicitly specify algorithm
-                issuer: "your-app-name", // Good practice for identifying tokens
+                algorithm: "HS256", 
+                issuer: "your-app-name", 
             }
         );
 
-        // Set cookie with secure options
+        
         res.cookie("token", token, {
             httpOnly: true,
-            secure: process.env.NODE_ENV === "production", // Only HTTPS in production
+            secure: process.env.NODE_ENV === "production", 
             sameSite: "lax",
             maxAge: 10 * 24 * 60 * 60 * 1000, // Match token expiry (10 days)
             path: "/",
-            // signed: true // Only if you're using cookie-parser's signed cookies
+            
         });
 
-        return token; // Return token in case you need it
+        return token; 
     } catch (error) {
         throw new ApiError(500, "Token generation failed: " + error.message);
     }
 };
 
-export default generateTokenAndSetCookie;
+export default genTokenAndSetCookie;

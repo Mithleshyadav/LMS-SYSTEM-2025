@@ -1,14 +1,17 @@
-import React from 'react'
-
-import { Routes, Route } from 'react-router-dom'
+import React, { useContext } from 'react';
+import { Routes, Route } from 'react-router-dom';
 import AuthPage from "./pages/auth";
 import RouteGuard from "./components/route-guard";
+import { AuthContext } from "./context/auth-context";
+import Home from './pages/student/home';
+import StudentViewCommonLayout from "./components/student-view/common-layout";
 
 const App = () => {
-   const { auth } = useContext(AuthContext);
+  const { auth } = useContext(AuthContext);
+
   return (
-   <Routes>
-     <Route
+    <Routes>
+      <Route
         path="/auth"
         element={
           <RouteGuard
@@ -18,8 +21,21 @@ const App = () => {
           />
         }
       />
-   </Routes>
-  )
-}
 
-export default App
+      <Route
+        path="/"
+        element={
+          <RouteGuard
+            element={<StudentViewCommonLayout />}
+            authenticated={auth?.authenticate}
+            user={auth?.user}
+          />
+        }
+      />
+       
+      
+    </Routes>
+  );
+};
+
+export default App;
