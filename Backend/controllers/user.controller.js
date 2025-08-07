@@ -5,7 +5,7 @@ import blacklistTokenModel from '../models/blacklistToken.model.js';
 import genTokenAndSetCookie from '../services/genTokenAndSetCookie.js';
 import ApiError from '../utils/ApiError.js';
 
-// ✅ Register
+
 export const registerUser = async (req, res, next) => {
   try {
     const errors = validationResult(req);
@@ -36,7 +36,6 @@ export const registerUser = async (req, res, next) => {
   }
 };
 
-// ✅ Login
 export const loginUser = async (req, res, next) => {
   try {
     const errors = validationResult(req);
@@ -67,7 +66,7 @@ export const loginUser = async (req, res, next) => {
   }
 };
 
-// ✅ Logout
+
 export const logoutUser = async (req, res, next) => {
   try {
     res.clearCookie('token');
@@ -88,7 +87,7 @@ export const logoutUser = async (req, res, next) => {
   }
 };
 
-// ✅ Auth Check
+
 export const checkAuth = async (req, res, next) => {
   try {
     const user = req.user;

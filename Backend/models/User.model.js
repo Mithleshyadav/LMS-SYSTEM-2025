@@ -23,6 +23,11 @@ password: {
   select: false,
   minlength:[6, 'Password must be at least 6 characters long'],
 },
+role: {
+  type: String,
+  enum: ['student', 'instructor'],
+  default: 'student',
+}
 
 },
 { timestamps: true }

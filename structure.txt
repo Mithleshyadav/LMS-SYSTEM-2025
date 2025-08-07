@@ -1,0 +1,29 @@
+- Backend
+  - controllers
+  - db
+  - middlewares
+  - models
+  - routes
+  - services
+  - utils
+- Frontend
+  - public
+  - src
+    - api
+    - assets
+    - components
+      - common-form
+      - route-guard
+      - student-view
+        - common-layout
+      - ui
+    - config
+    - context
+      - auth-context
+    - hooks
+    - lib
+    - pages
+      - auth
+      - student
+        - home
+    - services
