@@ -26,3 +26,31 @@ export const logoutService = async () => {
 };
 
 
+export async function addNewCourseService(formData){
+  const { data } = await axiosInstance.post(`/api/v1/instructor/course/add`, formData);
+  return data;
+}
+
+export async function updateCourseByIdService(id,
+  formData
+ ) {
+  const { data} = await axiosInstance.put(`/api/v1/instructor/course/update/${id}`, formData); 
+ }
+
+ export async function fetchInstructorCourseDetailsService(id) {
+  const { data } = await axiosInstance.get(`/api/v1/instructor/course/get/details/${id}`, formData);
+  
+  return data;
+ }
+ 
+ export async function mediaUploadService(formData, onProgressCallback) {
+  const { data } = await axiosInstance.post("/api/v1/media/upload", formData, {
+    onUploadProgress: (ProgressEvent) => {
+      const percentCompleted = Math.round(  
+        (ProgressEvent.loaded * 100) / ProgressEvent.total
+      );
+      onProgressCallback(percentCompleted);
+    }
+  });
+  return data;
+ }
