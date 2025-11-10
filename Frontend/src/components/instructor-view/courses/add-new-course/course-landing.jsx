@@ -22,4 +22,4 @@ const courseLanding = () => {
   )
 }
 
-export default course-landing
+export default courseLanding

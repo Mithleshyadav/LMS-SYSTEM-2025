@@ -1,4 +1,4 @@
-const mongoose = require("mongoose");
+import mongoose from "mongoose";
 
 // Lecture Subdocument Schema
 const LectureSchema = new mongoose.Schema({
@@ -124,4 +124,5 @@ const CourseSchema = new mongoose.Schema({
 // Indexing title and instructor for search optimization
 CourseSchema.index({ title: "text", instructorName: "text" });
 
-module.exports = mongoose.model("Course", CourseSchema);
+const Course = mongoose.model("Course", CourseSchema);
+export default Course;

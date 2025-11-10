@@ -1,14 +1,15 @@
 // auth.middleware.js
 import jwt from "jsonwebtoken";
-import userModel from "../models/user.model.js";
+import userModel from "../models/User.model.js";
 import blacklistTokenModel from "../models/blacklistToken.model.js";
 import ApiError from "../utils/ApiError.js";
 
 export const authUser = async (req, res, next) => {
   try {
     const token = req.cookies.token || req.headers.authorization?.split(" ")[1];
-
+     console.log("token:", token)
     if (!token) {
+      console.log("no token here")
       return next(ApiError.unauthorized("Authentication token not found"));
     }
 
@@ -19,14 +20,16 @@ export const authUser = async (req, res, next) => {
     }
 
     // Verify token and attach user to req
-    const decoded = jwt.verify(token, process.env.JWT_SECRET);
+    const decoded = jwt.verify(token, process.env.JWT_SECRET)
+    console.log("decoded:", decoded);
     const user = await userModel.findById(decoded._id);
-
     if (!user) {
       return next(ApiError.unauthorized("User not found. Invalid token."));
     }
-
+    
     req.user = user;
+    console.log("user in middleware:", req.user)
+
     next();
   } catch (error) {
     // Token invalid, expired, or malformed

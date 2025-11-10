@@ -13,7 +13,6 @@ import { AuthContext } from "@/context/auth-context";
 import { InstructorContext } from "@/context/instructor-context";
 import {
   addNewCourseService,
-  updateCourseByIdService,
   fetchInstructorCourseDetailsService,
 } from "@/services";
 import { useContext, useEffect }  from "react";
@@ -186,7 +185,7 @@ async function handleCreateCourse() {
                 value="curriculum">
                    Curriculum
                 </TabsTrigger>
-                <TabsTrigger value="course-Landing-page">Course Landing Page</TabsTrigger>
+                <TabsTrigger value="course-landing-page">Course Landing Page</TabsTrigger>
                 <TabsTrigger
                 value="settings">Settings</TabsTrigger>
               </TabsList>

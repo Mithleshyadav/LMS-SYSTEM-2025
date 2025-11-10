@@ -1,9 +1,10 @@
-import userModel from '../models/user.model.js';
+import userModel from '../models/User.model.js';
 import { createUser } from '../services/user.service.js';
 import { validationResult } from 'express-validator';
 import blacklistTokenModel from '../models/blacklistToken.model.js';
 import genTokenAndSetCookie from '../services/genTokenAndSetCookie.js';
 import ApiError from '../utils/ApiError.js';
+
 
 
 export const registerUser = async (req, res, next) => {
@@ -95,7 +96,7 @@ export const checkAuth = async (req, res, next) => {
     if (!user) {
       return next(ApiError.notFound("User validation failed"));
     }
-
+   
     return res.status(200).json({
       success: true,
       user,

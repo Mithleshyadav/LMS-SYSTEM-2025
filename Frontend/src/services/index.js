@@ -34,7 +34,8 @@ export async function addNewCourseService(formData){
 export async function updateCourseByIdService(id,
   formData
  ) {
-  const { data} = await axiosInstance.put(`/api/v1/instructor/course/update/${id}`, formData); 
+  const { data } = await axiosInstance.put(`/api/v1/instructor/course/update/${id}`, formData); 
+  return data;
  }
 
  export async function fetchInstructorCourseDetailsService(id) {
@@ -45,12 +46,15 @@ export async function updateCourseByIdService(id,
  
  export async function mediaUploadService(formData, onProgressCallback) {
   const { data } = await axiosInstance.post("/api/v1/media/upload", formData, {
+    headers: {
+      "Content-Type": "multipart/form-data", // ✅ override only here
+    },
     onUploadProgress: (ProgressEvent) => {
-      const percentCompleted = Math.round(  
+      const percentCompleted = Math.round(
         (ProgressEvent.loaded * 100) / ProgressEvent.total
       );
       onProgressCallback(percentCompleted);
-    }
+    },
   });
   return data;
- }
+}

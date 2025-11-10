@@ -3,13 +3,17 @@ import { createRoot } from 'react-dom/client'
 import './index.css'
 import App from './App.jsx'
 import { BrowserRouter } from 'react-router-dom'
-import AuthProvider from './context/auth-context/index.jsx'
+import AuthContextProvider from './context/auth-context/index.jsx'
+import InstructorContextProvider  from "@/context/instructor-context";
 import { Toaster } from "@/components/ui/toaster"
 createRoot(document.getElementById('root')).render(
   <BrowserRouter>
-  <AuthProvider>
+  <InstructorContextProvider>
+
+  <AuthContextProvider>
   <App/>
   <Toaster/>
-  </AuthProvider>
+  </AuthContextProvider>
+  </InstructorContextProvider>
   </BrowserRouter>
 );

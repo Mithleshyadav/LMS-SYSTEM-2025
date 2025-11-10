@@ -1,6 +1,7 @@
 import { validationResult } from "express-validator";
-import { createCourse, getCourseByTitleAndInstructor } from "../services/course.service.js";
-import ApiError from "../utils/ApiError.js";
+import { uploadMediaToCloudinary, createCourse, getCourseByTitleAndInstructor } from "../../services/course.service.js";
+import ApiError from "../../utils/ApiError.js";
+import fs from "fs";
 
 export const addNewCourse = async (req, res, next) => {
   try {
@@ -32,3 +33,33 @@ export const addNewCourse = async (req, res, next) => {
     next(ApiError.internal(error.message));
   }
 };
+
+
+
+export const uploadMedia = async (req, res, next) => {
+  try {
+    if (!req.file) {
+      throw new ApiError(400, "No file uploaded");
+    }
+
+    // Upload to Cloudinary
+    const uploadResult = await uploadMediaToCloudinary(req.file.path);
+
+    // Remove temp file
+    fs.unlink(req.file.path, (err) => {
+      if (err) console.error("Failed to delete temp file:", err);
+    });
+
+    return res.status(200).json({
+      success: true,
+      message: "File uploaded successfully",
+      data: {
+        url: uploadResult.secure_url,
+        public_id: uploadResult.public_id,
+      },
+    });
+  } catch (error) {
+    next(new ApiError(500, error.message));
+  }
+};
+

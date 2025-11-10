@@ -1,9 +1,11 @@
-import React, { useContext } from 'react';
-import { Routes, Route } from 'react-router-dom';
+import React, { useContext } from "react";
+import { Routes, Route } from "react-router-dom";
 import AuthPage from "./pages/auth";
 import RouteGuard from "./components/route-guard";
 import { AuthContext } from "./context/auth-context";
-import Home from './pages/student/home';
+import InstructorDashboardpage from "./pages/instructor";
+import AddNewCoursePage from "./pages/instructor/add-new-course";
+import Home from "./pages/student/home";
 import StudentViewCommonLayout from "./components/student-view/common-layout";
 
 const App = () => {
@@ -21,7 +23,36 @@ const App = () => {
           />
         }
       />
-
+      <Route
+        path="/instructor"
+        element={
+          <RouteGuard
+            element={<InstructorDashboardpage />}
+            authenticated={auth?.authenticate}
+            user={auth?.user}
+          />
+        }
+      />
+      <Route
+        path="/instructor/create-new-course"
+        element={
+          <RouteGuard
+            element={<AddNewCoursePage />}
+            authenticated={auth?.authenticate}
+            user={auth?.user}
+          />
+        }
+      />
+      <Route
+        path="/home"
+        element={
+          <RouteGuard
+            element={<StudentViewCommonLayout />}
+            authenticated={auth?.authenticate}
+            user={auth?.user}
+          />
+        }
+      />
       <Route
         path="/"
         element={
@@ -32,8 +63,6 @@ const App = () => {
           />
         }
       />
-       
-      
     </Routes>
   );
 };

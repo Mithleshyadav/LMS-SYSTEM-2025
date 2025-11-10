@@ -9,7 +9,7 @@ const genTokenAndSetCookie = (userId, res) => {
         }
 
         const token = jwt.sign(
-            { userId },
+            { _id: userId },
             process.env.JWT_SECRET, 
             {
                 expiresIn: "10d",

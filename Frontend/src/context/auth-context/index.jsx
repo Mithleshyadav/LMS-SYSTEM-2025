@@ -56,14 +56,12 @@ export default function AuthProvider({ children }) {
     try {
       const res = await loginService(signInFormData);
       setAuth({ authenticate: true, user: res?.data?.user });
-
       toast({
         title: "Success",
         description: res?.data?.message || "Logged in successfully",
       });
 
-      setSignInFormData(initialSignInFormData);
-      navigate("/"); // Redirect to home after login
+      setSignInFormData(initialSignInFormData); // Redirect to home after login
     } catch (err) {
       const error = err?.response?.data;
       toast({
@@ -78,12 +76,21 @@ export default function AuthProvider({ children }) {
   async function checkAuthUser() {
     try {
       const res = await checkAuthService();
-      if (res.success) {
+      console.log("check auth:",res.data.user)
+      if (res.data.success) {
         setAuth({ authenticate: true, user: res.data.user });
+        console.log("auth set sucessfully")
+        
       } else {
         resetCredentials();
       }
     } catch (err) {
+      const error = err?.response?.data;
+      toast({
+        title: "authentication Failed",
+        description: error?.message || "Invalid credentials",
+        variant: "destructive",
+      });
       resetCredentials();
     } finally {
       setLoading(false);
