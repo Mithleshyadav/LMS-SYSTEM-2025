@@ -4,7 +4,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { courseLandingPageFormControls } from "@/config";
 import { InstructorContext } from "@/context/instructor-context";
 
-const courseLanding = () => {
+const CourseLanding = () => {
   const  { courseLandingFormData, setCourseLandingFormData } = useContext(InstructorContext);
   return (
     <Card>
@@ -22,4 +22,4 @@ const courseLanding = () => {
   )
 }
 
-export default courseLanding
+export default CourseLanding

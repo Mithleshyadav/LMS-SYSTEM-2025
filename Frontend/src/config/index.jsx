@@ -87,14 +87,14 @@ export const courseCategories = [
 export const courseLandingPageFormControls = [
 {  name: "title",
    label: "Title",
-   commonType: "input",
+   componentType: "input",
    type: "text",
    placeholder: "Enter course title"
   },
   {
    name: "category",
    label: "Category",
-   commonType: "select",
+   componentType: "select",
    type: "text",
    placeholder: "",
    options: courseCategories 

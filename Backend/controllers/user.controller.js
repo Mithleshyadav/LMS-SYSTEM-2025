@@ -1,11 +1,9 @@
-import userModel from '../models/User.model.js';
-import { createUser } from '../services/user.service.js';
-import { validationResult } from 'express-validator';
-import blacklistTokenModel from '../models/blacklistToken.model.js';
-import genTokenAndSetCookie from '../services/genTokenAndSetCookie.js';
-import ApiError from '../utils/ApiError.js';
-
-
+import userModel from "../models/User.model.js";
+import { createUser } from "../services/user.service.js";
+import { validationResult } from "express-validator";
+import blacklistTokenModel from "../models/blacklistToken.model.js";
+import genTokenAndSetCookie from "../services/genTokenAndSetCookie.js";
+import ApiError from "../utils/ApiError.js";
 
 export const registerUser = async (req, res, next) => {
   try {
@@ -23,7 +21,11 @@ export const registerUser = async (req, res, next) => {
 
     const hashedPassword = await userModel.hashPassword(password);
 
-    const user = await createUser({ userName, userEmail, password: hashedPassword });
+    const user = await createUser({
+      userName,
+      userEmail,
+      password: hashedPassword,
+    });
     if (!user) {
       return next(ApiError.internal("Failed to create user"));
     }
@@ -45,7 +47,7 @@ export const loginUser = async (req, res, next) => {
     }
 
     const { userEmail, password } = req.body;
-    const user = await userModel.findOne({ userEmail }).select('+password');
+    const user = await userModel.findOne({ userEmail }).select("+password");
 
     if (!user) {
       return next(ApiError.badRequest("Invalid email or password"));
@@ -67,11 +69,10 @@ export const loginUser = async (req, res, next) => {
   }
 };
 
-
 export const logoutUser = async (req, res, next) => {
   try {
-    res.clearCookie('token');
-    const token = req.cookies.token || req.headers.authorization?.split(' ')[1];
+    res.clearCookie("token");
+    const token = req.cookies.token || req.headers.authorization?.split(" ")[1];
 
     if (!token) {
       return next(ApiError.badRequest("No token provided for logout"));
@@ -81,13 +82,12 @@ export const logoutUser = async (req, res, next) => {
 
     return res.status(200).json({
       success: true,
-      message: 'Logged out successfully',
+      message: "Logged out successfully",
     });
   } catch (error) {
     next(ApiError.internal(error.message));
   }
 };
-
 
 export const checkAuth = async (req, res, next) => {
   try {
@@ -96,7 +96,7 @@ export const checkAuth = async (req, res, next) => {
     if (!user) {
       return next(ApiError.notFound("User validation failed"));
     }
-   
+
     return res.status(200).json({
       success: true,
       user,

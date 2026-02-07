@@ -3,8 +3,8 @@ import { Routes, Route } from "react-router-dom";
 import AuthPage from "./pages/auth";
 import RouteGuard from "./components/route-guard";
 import { AuthContext } from "./context/auth-context";
-import InstructorDashboardpage from "./pages/instructor";
-import AddNewCoursePage from "./pages/instructor/add-new-course";
+import InstructorDashboardpage from "./pages/instructor/instructorDashboard";
+import AddNewCoursePage from "./pages/instructor/add-new-coursepage";
 import Home from "./pages/student/home";
 import StudentViewCommonLayout from "./components/student-view/common-layout";
 
