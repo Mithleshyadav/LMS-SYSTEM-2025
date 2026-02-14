@@ -43,6 +43,16 @@ const App = () => {
           />
         }
       />
+       <Route
+        path="/instructor/edit-course/:courseId"
+        element={
+          <RouteGuard
+            element={<AddNewCoursePage />}
+            authenticated={auth?.authenticate}
+            user={auth?.user}
+          />
+        }
+      />
       <Route
         path="/home"
         element={

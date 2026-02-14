@@ -26,6 +26,9 @@ const useAddnewCourse = () => {
     setCurrentEditedCourseId,
   } = useContext(InstructorContext);
 
+   
+ 
+
   function isEmpty(value) {
     if (Array.isArray(value)) {
       return value.length === 0;
@@ -106,7 +109,7 @@ const useAddnewCourse = () => {
 
   async function fetchCurrentCourseDetails() {
     const response = await fetchInstructorCourseDetailsService(
-      currentEditedCourseId,
+      currentEditedCourseId
     );
     
 
@@ -124,6 +127,9 @@ const useAddnewCourse = () => {
       setCourseCurriculumFormData(response?.data?.curriculum);
     }
   }
+
+
+  
 
   useEffect(() => {
     if (currentEditedCourseId !== null) {

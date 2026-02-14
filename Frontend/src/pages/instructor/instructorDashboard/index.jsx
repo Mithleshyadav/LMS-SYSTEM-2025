@@ -1,28 +1,31 @@
 import { Tabs, TabsContent } from '@radix-ui/react-tabs'
-import InstructorCourses from "@/components/instructor-view/courses"
-import InstructorDashboard from "@/components/instructor-view/dashboard"
 import { Button } from "@/components/ui/button"
+
+import { BarChart, Book, LogOut } from 'lucide-react'
+import { useContext, useState,useEffect } from "react"
 import { AuthContext } from "@/context/auth-context"
 import { InstructorContext } from "@/context/instructor-context"
-import { BarChart, Book, LogOut } from 'lucide-react'
-import { useContext, useState } from "react"
+import InstructorCourses from "@/components/instructor-view/courses"
+import InstructorDashboard from "@/components/instructor-view/dashboard"
+import { fetchInstructorCourseListService } from '@/services'
 
 const InstructorDashboardpage = () => {
   const [activeTab, setActiveTab] = useState('dashboard');
-  const { resetCredentials } = useContext(AuthContext);
+  const {handleLogout } = useContext(AuthContext);
+  const {instructorCoursesList, setInstructorCoursesList} = useContext(InstructorContext);
 
   const menuItems =[
     {
       icon: BarChart,
       label: "Dashboard",
       value: "dashboard",
-      component: <InstructorDashboard />
+      component: <InstructorDashboard  listOfCourses={instructorCoursesList}/>
     },
     {
       icon: Book,
       label: "Courses",
       value: "courses",
-      component: <InstructorCourses />
+      component: <InstructorCourses  listOfCourses={instructorCoursesList}/>
     },
     {
       icon: LogOut,
@@ -32,10 +35,16 @@ const InstructorDashboardpage = () => {
     },
   ];
 
-  function handleLogout(){
-    resetCredentials();
-    sessionStorage.clear();
-  }
+
+   async function fetchAllCourses() {
+      const response = await fetchInstructorCourseListService();
+      if (response?.success) setInstructorCoursesList(response?.data);
+    }
+  
+    useEffect(() => {
+      fetchAllCourses();
+    }, []);
+  
   
   return (
     <div className='flex h-full min-h-screen bg-gray-100'>

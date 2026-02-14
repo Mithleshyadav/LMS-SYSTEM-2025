@@ -26,6 +26,12 @@ export const logoutService = async () => {
 };
 
 
+export async function fetchInstructorCourseListService() {
+  const { data } = await axiosInstance.get(`/api/v1/instructor/course/get`);
+
+  return data;
+}
+
 export async function addNewCourseService(formData){
   const { data } = await axiosInstance.post(`/api/v1/instructor/course/add`, formData);
   return data;
@@ -39,7 +45,7 @@ export async function updateCourseByIdService(id,
  }
 
  export async function fetchInstructorCourseDetailsService(id) {
-  const { data } = await axiosInstance.get(`/api/v1/instructor/course/get/details/${id}`, formData);
+  const { data } = await axiosInstance.get(`/api/v1/instructor/course/get/details/${id}`);
   
   return data;
  }

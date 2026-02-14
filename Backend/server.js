@@ -6,6 +6,7 @@ import errorMiddleware from "./middlewares/error.middleware.js";
 import cookieParser from "cookie-parser"
 import userRoutes from "./routes/user.route.js"; 
 import mediaRoutes from "./routes/instructor-routes/media-routes.js";
+import instructorCourseRoutes from "./routes/instructor-routes/course-routes.js"
 
 
 
@@ -29,6 +30,7 @@ app.use(express.json());
 
 app.use('/api/v1/auth', userRoutes);
 app.use('/api/v1/media', mediaRoutes);
+app.use("/api/v1/instructor/course", instructorCourseRoutes);
 
 
 app.listen(PORT, () => {

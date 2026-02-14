@@ -11,7 +11,7 @@ import {
   CardTitle,
 } from '@/components/ui/card';
 import { signInFormControls, signUpFormControls } from '@/config';
-import { AuthContext } from '@/context/auth-context';
+import useAuth from "./useAuth"
 import CommonForm from '@/components/common-form';
 
 function AuthPage() {
@@ -26,7 +26,7 @@ function AuthPage() {
     signInFormData,
     setSignInFormData,
     handleLoginUser,
-  } = useContext(AuthContext);
+  } = useAuth();
 
   function checkIfSignInFormIsValid() {
     return (

@@ -1,9 +1,9 @@
-import userModel from "../models/User.model.js";
-import { createUser } from "../services/user.service.js";
+import userModel from "../../models/User.model.js";
+import { createUser } from "../../services/user.service.js";
 import { validationResult } from "express-validator";
-import blacklistTokenModel from "../models/blacklistToken.model.js";
-import genTokenAndSetCookie from "../services/genTokenAndSetCookie.js";
-import ApiError from "../utils/ApiError.js";
+import blacklistTokenModel from "../../models/blacklistToken.model.js";
+import genTokenAndSetCookie from "../../services/genTokenAndSetCookie.js";
+import ApiError from "../../utils/ApiError.js";
 
 export const registerUser = async (req, res, next) => {
   try {

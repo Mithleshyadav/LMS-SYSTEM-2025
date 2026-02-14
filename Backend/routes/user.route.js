@@ -4,7 +4,7 @@ import {body} from "express-validator";
 
 import {authUser} from '../middlewares/auth.middleware.js';
 
-import {registerUser, loginUser, logoutUser, checkAuth } from '../controllers/user.controller.js';
+import {registerUser, loginUser, logoutUser, checkAuth } from '../controllers/auth-controller/index.js';
 
 router.post('/register', [ 
   body('userEmail').isEmail().withMessage('Invalid Email'),
