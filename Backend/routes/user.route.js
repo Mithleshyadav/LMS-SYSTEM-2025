@@ -22,7 +22,7 @@ loginUser
 );
 router.get('/checkAuth', authUser, checkAuth);
 
-router.get('/logout', authUser, logoutUser);
+router.post('/logout', authUser, logoutUser);
 
 
 export default router;

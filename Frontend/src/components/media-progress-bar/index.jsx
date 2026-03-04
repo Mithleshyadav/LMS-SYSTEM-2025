@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState,memo } from "react";
 import { motion } from "framer-motion";
 
 function MediaProgressbar({ isMediaUploading, progress }) {
@@ -48,4 +48,4 @@ function MediaProgressbar({ isMediaUploading, progress }) {
   );
 }
 
-export default MediaProgressbar;
+export default memo(MediaProgressbar) ;

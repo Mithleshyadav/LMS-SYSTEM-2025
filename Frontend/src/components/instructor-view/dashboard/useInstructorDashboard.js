@@ -1,5 +1,5 @@
 const useInstructorDashboard = () => {
-  function calculateTotalStudentsAndProfit() {
+  function calculateTotalStudentsAndProfit({listOfCourses = []}) {
     const { totalStudents, totalProfit, studentList } = listOfCourses.reduce(
       (acc, course) => {
         const studentCount = course?.students?.length || 0;

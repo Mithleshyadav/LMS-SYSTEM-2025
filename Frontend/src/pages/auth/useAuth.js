@@ -1,30 +1,20 @@
-import { useContext} from "react";
+import { useState,useContext } from "react";
 import { useNavigate } from "react-router-dom";
 import { toast } from "@/hooks/use-toast";
 
-import {
-  initialSignInFormData,
-  initialSignUpFormData,
-} from "@/config";
-import {
-  loginService,
-  registerService,
-} from "@/services";
+import { initialSignInFormData, initialSignUpFormData } from "@/config";
+import { loginService, registerService } from "@/services";
 
 import { AuthContext } from "@/context/auth-context";
 
-
 const useAuth = () => {
+  const navigate = useNavigate();
+  const [signUpFormData, setSignUpFormData] = useState(initialSignUpFormData);
+  const [signInFormData, setSignInFormData] = useState(initialSignInFormData);
 
-     const navigate = useNavigate();
-
- const {
-    signUpFormData,
-     setSignUpFormData,
-     signInFormData,
-     setSignInFormData,
-     setAuth,
- }  = useContext(AuthContext);
+  const {
+    setAuth,
+  } = useContext(AuthContext);
 
   // ✅ Registration
   async function handleRegisterUser(event) {
@@ -59,7 +49,7 @@ const useAuth = () => {
         title: "Success",
         description: res?.data?.message || "Logged in successfully",
       });
-
+     
       setSignInFormData(initialSignInFormData); // Redirect to home after login
     } catch (err) {
       const error = err?.response?.data;
@@ -72,9 +62,14 @@ const useAuth = () => {
   }
 
   // ✅ Auth Check
- 
 
-  return (signUpFormData,{handleRegisterUser,signInFormData,handleLoginUser,})
-}
-
-export default useAuth
+  return {
+    signUpFormData,
+    setSignUpFormData,
+    handleRegisterUser,
+    signInFormData,
+    setSignInFormData,
+    handleLoginUser,
+  };
+};
+export default useAuth;

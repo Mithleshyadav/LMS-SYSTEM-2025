@@ -11,15 +11,46 @@ export const getCourseByTitleAndInstructor = async (title, instructorId) => {
   return await Course.findOne({ title, instructorId });
 };
 
-
 export const uploadMediaToCloudinary = async (filePath) => {
   try {
+    
     const result = await cloudinary.uploader.upload(filePath, {
-      resource_type: "video", // or "auto" if you may also upload images
-      folder: "lms_videos",  // optional: keep uploads organized
+      resource_type: "auto"
     });
+
     return result;
   } catch (error) {
-    throw new ApiError(500, "Cloudinary upload failed");
+    throw new ApiError(500, error.message);
   }
 };
+
+
+export const deleteMediaFromCloudinary = async (publicId) => {
+  try {
+    const result =await cloudinary.uploader.destroy(publicId, {
+      resource_type:"video"
+    });
+    if(result.result !== "ok"){
+      throw new ApiError(400, "Failed to delete media from Cloudinary");
+    }
+    console.log("cloudinary delete result:", result);
+    return result;
+
+  } catch (error){
+    throw new ApiError(500, error.message);
+  }
+}
+
+export const replaceMediaFromCloudinary = async (publicId) => {
+  try {
+   const  result = await cloudinary.uploader.destroy(publicId, {
+    resource_type: "video"
+   });
+   if(result.result !== "ok"){
+    throw new ApiError(400, "Failed to replace media in Cloudinary");
+   }
+
+  } catch (error){
+    throw new ApiError(500, error.message);
+  }
+}

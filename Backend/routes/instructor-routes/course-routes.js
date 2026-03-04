@@ -1,15 +1,16 @@
-import { getAllCourses, getCourseDetailsByID } from "../../../../MERN-LMS-2024/server/controllers/instructor-controller/course-controller";
-
-const express = require("express");
+import express from "express";
 const router = express.Router();
 
-const { 
+import { 
   addNewCourse,
-} = require("../../controllers/instructor-controller/course-controller");
+  getAllCourses,
+  getCourseDetailsByID,
+  updateCourseById
+} from  "../../controllers/instructor-controller/course.controller.js";
 
 router.post("/add", addNewCourse);
-router.post("/get",getAllCourses);
-router.post("/get/details/:id",getCourseDetailsByID);
-router.put("/update/:id", updateCourseByID);
+router.get("/get",getAllCourses);
+router.get("/get/details/:id",getCourseDetailsByID);
+router.put("/update/:id", updateCourseById);
 
 export default router;

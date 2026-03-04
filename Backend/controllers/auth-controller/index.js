@@ -63,6 +63,11 @@ export const loginUser = async (req, res, next) => {
     return res.status(200).json({
       success: true,
       message: "User logged in successfully",
+      user: {
+        id: user._id,
+        userName: user.userName,
+        role: user.role,
+      }
     });
   } catch (error) {
     next(ApiError.internal(error.message));
@@ -71,16 +76,15 @@ export const loginUser = async (req, res, next) => {
 
 export const logoutUser = async (req, res, next) => {
   try {
-    res.clearCookie("token");
-    const token = req.cookies.token || req.headers.authorization?.split(" ")[1];
+    await blacklistTokenModel.create({ token: req.token });
 
-    if (!token) {
-      return next(ApiError.badRequest("No token provided for logout"));
-    }
+    res.clearCookie("token", {
+      httpOnly: true,
+      secure: true,
+      sameSite: "strict",
+    });
 
-    await blacklistTokenModel.create({ token });
-
-    return res.status(200).json({
+    res.status(200).json({
       success: true,
       message: "Logged out successfully",
     });
@@ -88,6 +92,7 @@ export const logoutUser = async (req, res, next) => {
     next(ApiError.internal(error.message));
   }
 };
+
 
 export const checkAuth = async (req, res, next) => {
   try {
@@ -99,7 +104,12 @@ export const checkAuth = async (req, res, next) => {
 
     return res.status(200).json({
       success: true,
-      user,
+      message: "User authenticated",
+      user: {
+        id: user._id,
+        userName: user.userName,
+        role: user.role,
+      }
     });
   } catch (error) {
     next(ApiError.internal(error.message));

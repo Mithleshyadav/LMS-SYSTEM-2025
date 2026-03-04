@@ -64,3 +64,40 @@ export async function updateCourseByIdService(id,
   });
   return data;
 }
+
+export async function mediaBulkUploadService(
+  formData,
+  onProgressCallback
+) {
+  const { data } = await axiosInstance.post(
+    "/api/v1/media/bulk-upload",
+    formData,
+    {
+      onUploadProgress: (progressEvent) => {
+        const percentCompleted = Math.round(
+          (progressEvent.loaded * 100) / progressEvent.total
+        );
+        onProgressCallback(percentCompleted);
+      },
+    }
+  );
+
+  return data;
+}
+
+export async function mediaDeleteService(courseId,public_id){
+  const { data } = await axiosInstance.delete("/api/v1/media/delete", {
+  params: {
+    public_id,
+    courseId,
+  }
+});
+  return data;
+}
+
+export async function mediaReplaceService(public_id){
+  const { data } = await axiosInstance.delete("/api/v1/media/replace", {
+    data: {public_id}
+  });
+  return data;
+}

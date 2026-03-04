@@ -28,6 +28,7 @@ export const authUser = async (req, res, next) => {
     }
     
     req.user = user;
+    req.token = token; 
     console.log("user in middleware:", req.user)
 
     next();

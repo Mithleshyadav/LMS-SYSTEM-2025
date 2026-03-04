@@ -3,10 +3,14 @@ import {
   uploadMediaToCloudinary,
   createCourse,
   getCourseByTitleAndInstructor,
+  deleteMediaFromCloudinary,
+  replaceMediaFromCloudinary,
 } from "../../services/course.service.js";
 import ApiError from "../../utils/ApiError.js";
 import fs from "fs";
 import mongoose from "mongoose";
+import Course from "../../models/course.model.js"
+import cloudinary from "../../config/cloudinary.js";
 
 export const addNewCourse = async (req, res, next) => {
   try {
@@ -16,6 +20,7 @@ export const addNewCourse = async (req, res, next) => {
     }
 
     const courseData = req.body;
+    console.log("Received course data:", courseData);
 
     const existingCourse = await getCourseByTitleAndInstructor(
       courseData.title,
@@ -71,6 +76,80 @@ export const uploadMedia = async (req, res, next) => {
   }
 };
 
+
+export const uploadBulkMedia = async (req, res, next) => {
+  try {
+    if (!req.files || req.files.length === 0) {
+      throw new ApiError(400, "No files uploaded");
+    }
+
+    // Upload all files in parallel (faster 🚀)
+  const uploadPromises = req.files.map((file) =>
+      uploadMediaToCloudinary(file.path)
+    );
+
+    const results = await Promise.all(uploadPromises);
+
+    // ✅ Only send required fields
+    const uploadedFiles = results.map((item) => ({
+      url: item.secure_url,
+      public_id: item.public_id,
+    })
+  );
+    return res.status(200).json({
+      success: true,
+      message: "Files uploaded successfully",
+      data: uploadedFiles,
+    });
+  } catch (error) {
+    console.error("Bulk Upload Error:", error);
+    next(error);
+  }
+};
+
+export const deleteMedia = async(req,res,next) => {
+  try{
+    const { public_id, courseId } = req.query;
+
+     if (!courseId || !public_id) {
+      return res.status(400).json({
+        success: false,
+        message: "courseId and public_id are required",
+      });
+    }
+
+    const result = await deleteMediaFromCloudinary(public_id);
+    await Course.findByIdAndUpdate(courseId, { $pull: { curriculum: { public_id: public_id } } });
+    return res.status(200).json({
+      success: true,
+      message: "Media deleted successfully",
+      data: result,
+    });
+
+  } catch (error){
+    next(error);
+  }
+}
+
+export const replaceMedia = async(req,res,next)=>{
+  try{
+    const { public_id } = req.body;
+    if (!public_id){
+      return res.status(400).json({
+        success: false,
+        message: "public_id is required",
+      })
+    }
+    const result = await replaceMediaFromCloudinary(public_id);
+    res.status(200).json({
+      success: true,
+      message: "Media replaced successfully",
+    })
+  }catch(error){
+    next(error);
+  }
+}
+
 export const getAllCourses = async (req, res, next) => {
   try {
     const courses = await Course.find({}).lean();
@@ -118,7 +197,7 @@ export const getCourseDetailsByID = async (req, res, next) => {
 
 export const updateCourseById = async (req, res, next) => {
   try {
-    const id = req.params;
+    const { id } = req.params;
     const updateData = req.body;
 
     if (!mongoose.Types.ObjectId.isValid(id)) {

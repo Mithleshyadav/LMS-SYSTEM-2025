@@ -15,6 +15,9 @@ class ApiError extends Error {
   static badRequest(message = "Bad Request", errors = []) {
       return new ApiError(400, message, errors);
   }
+    static unauthorized(message, errors = []) {
+    return new ApiError(401, message, errors);
+  }
 
   static notFound(message = "Not Found") {
       return new ApiError(404, message);
